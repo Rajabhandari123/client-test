@@ -35,6 +35,7 @@ class Login extends Component {
   }
 
   onChange = e => {
+    console.log('target', e.target);
     this.setState({ [e.target.id]: e.target.value });
   };
 
@@ -51,6 +52,7 @@ class Login extends Component {
 
   render() {
     const { errors } = this.state;
+    console.log('errors', errors);
 
     return (
       <div className="container">

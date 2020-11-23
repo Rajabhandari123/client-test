@@ -7,6 +7,14 @@ const users = require("./routes/api/users");
 
 const app = express();
 
+mongoose.connect('mongodb+srv://jaewon:pass@node-rest-shop.fbe9p.mongodb.net/<dbname>?retryWrites=true&w=majority', {
+  useNewUrlParser: true, useUnifiedTopology: true
+}).then(() => {
+  console.log('DB connected');
+})
+  .catch((err) => {
+    console.log(err);
+  });
 // Bodyparser middleware
 app.use(
   bodyParser.urlencoded({
@@ -15,17 +23,20 @@ app.use(
 );
 app.use(bodyParser.json());
 
-// DB Config
-const db = require("./config/keys").mongoURI;
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+    return res.status(200).json({});
+  }
+  next();
+});
 
-// Connect to MongoDB
-mongoose
-  .connect(
-    db,
-    { useNewUrlParser: true }
-  )
-  .then(() => console.log("MongoDB successfully connected"))
-  .catch(err => console.log(err));
+
 
 // Passport middleware
 app.use(passport.initialize());
